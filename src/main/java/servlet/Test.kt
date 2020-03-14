@@ -2,12 +2,13 @@ package servlet
 
 import enums.Message
 import enums.Status
+import util.CONF
 import java.io.PrintWriter
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import Value.fields
+import util.Value.fields
 
 @WebServlet(urlPatterns = ["/test" ])
 class Test : HttpServlet() {
@@ -16,7 +17,8 @@ class Test : HttpServlet() {
         req.characterEncoding = "UTF-8"
         resp.contentType = "text/html;charset=UTF-8"
         writer = resp.writer
-        Message(Status.OK, "hhr你好", "${req.parameterMap.fields().values}").write()
+        writer.println("${CONF.portrait.exists()}")
+        writer.println("${CONF.portrait.exists()}")
     }
 
     override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {

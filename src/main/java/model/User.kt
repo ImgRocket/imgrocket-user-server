@@ -2,6 +2,8 @@ package model
 
 import conn.MySQLConn
 import enums.Status
+import util.CONF
+import util.Value
 import java.sql.SQLException
 import java.sql.Timestamp
 import java.util.*

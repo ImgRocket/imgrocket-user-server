@@ -1,4 +1,4 @@
-<%--
+<%@ page import="util.CONF" %><%--
   Created by IntelliJ IDEA.
   model.User: WCF
   Date: 2020/3/12

@@ -1,11 +1,12 @@
 package servlet
 
-import CONF
-import Value.fields
+import util.CONF
+import util.Value.fields
 import enums.Message
 import enums.Status
 import model.User
 import model.User.Companion.LoginResult
+import util.Value
 import java.io.PrintWriter
 import java.util.*
 import javax.servlet.annotation.WebServlet

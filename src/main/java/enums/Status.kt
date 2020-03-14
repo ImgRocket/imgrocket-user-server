@@ -1,5 +1,7 @@
 package enums
 
+import util.CONF
+
 enum class Status {
     AE, // argument mismatch
     UR, // nickname have been registered
@@ -12,7 +14,7 @@ enum class Status {
     OTHER;
 }
 
-class Message<T>(val status: Status, val message: String, val data: T? = null) {
+class Message<T>(private val status: Status, private val message: String, private val data: T? = null) {
     fun json(): String {
         return gson.toJson(Message(status, message, data), Message::class.java)
     }

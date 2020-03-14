@@ -1,17 +1,17 @@
 package conn
 
-import CONF
+import util.CONF
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 
 object MySQLConn {
-    private val SERVER = CONF.conf.server
+    private val SERVER = CONF.DB_SERVER
     private const val DBNAME = "imagerocket"
     private val MySQLConnStr =
         "jdbc:mysql://$SERVER/$DBNAME?useUnicode=true&characterEncoding=utf8"
-    private val USER = CONF.conf.user
-    private val PASSWORD = CONF.conf.password
+    private val USER = CONF.DB_USER
+    private val PASSWORD = CONF.DB_PASSWORD
 
 
     private var conn: Connection? = null

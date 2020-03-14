@@ -1,9 +1,6 @@
-import com.alibaba.fastjson.JSONArray
-import com.alibaba.fastjson.JSONObject
-import enums.Status
-import file.FileUtil
-import java.io.ByteArrayInputStream
-import java.io.File
+package util
+
+import java.io.*
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.sql.Blob
@@ -32,7 +29,10 @@ object Value {
     }
 
     fun String?.value(default: Int = 0): Int {
-        try { this?.let { return it.toInt() } } catch (e: Exception) { }
+        try {
+            this?.let { return it.toInt() }
+        } catch (e: Exception) {
+        }
         return default
     }
 
@@ -61,48 +61,18 @@ object Value {
         messageDigest.update(inputByteArray)
         val resultByteArray = messageDigest.digest()
         return byteArrayToHex(resultByteArray)
-
     }
 
     private fun byteArrayToHex(byteArray: ByteArray): String {
         val hexDigits = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
         val resultCharArray = CharArray(byteArray.size * 2)
         var index = 0
-
         for (b in byteArray) {
             resultCharArray[index++] = hexDigits[b.toInt().ushr(4) and 0xf]
             resultCharArray[index++] = hexDigits[(b and 0xf).toInt()]
         }
-
         return String(resultCharArray)
     }
-
-    fun json(status: Status, msg: String, data: HashMap<String, String>): String {
-        val map = JSONObject()
-        map["shortcut"] = status.name
-        map["msg"] = msg
-        map["data"] = JSONObject(data as Map<String, Any>?)
-        return map.toJSONString()
-    }
-
-    fun json(status: Status, msg: String, list: List<Any>): String {
-        val map = JSONObject()
-        map["shortcut"] = status.name
-        map["msg"] = msg
-        map["data"] = JSONArray(list)
-        return map.toJSONString()
-    }
-
-    fun json(status: Status, msg: String): String {
-        val map = JSONObject()
-        map["shortcut"] = status.name
-        map["msg"] = msg
-        return map.toJSONString()
-    }
-
-    fun htmlTemplate(): String = FileUtil.readAll(File("${CONF.root}/html/template.html"))
-
-    fun markdownAirCss(): String = FileUtil.readAll(File("${CONF.root}/css/markdown-air.css"))
 
     fun random() = ("${Date().time}${(10000000..99999999).random()}".hashCode() and Integer.MAX_VALUE).toString()
 
@@ -120,33 +90,48 @@ object Value {
         return fields
     }
 
-    fun getIP(request: HttpServletRequest): String {
-        var ip: String? = request.getHeader("x-forwarded-for")
-        if (ip != null && ip.isNotEmpty() && !"unknown".equals(ip, ignoreCase = true)) {
-            // 多次反向代理后会有多个ip值，第一个ip才是真实ip
-            if (ip.contains(",")) {
-                ip = ip.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
-            }
+    fun HttpServletRequest.ip(): String {
+        var ip: String? = this.getHeader("x-forwarded-for")
+        if (ip != null && ip.isNotEmpty() && !ip.equals("unknown", ignoreCase = true) && ip.contains(",")) {
+            ip = ip.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
         }
-        if (ip == null || ip.isEmpty() || "unknown".equals(ip, ignoreCase = true)) {
-            ip = request.getHeader("Proxy-Client-IP")
+        if (ip == null || ip.isEmpty() || ip.equals("unknown", ignoreCase = true)) {
+            ip = this.getHeader("Proxy-Client-IP")
         }
-        if (ip == null || ip.isEmpty() || "unknown".equals(ip, ignoreCase = true)) {
-            ip = request.getHeader("WL-Proxy-Client-IP")
+        if (ip == null || ip.isEmpty() || ip.equals("unknown", ignoreCase = true)) {
+            ip = this.getHeader("WL-Proxy-Client-IP")
         }
-        if (ip == null || ip.isEmpty() || "unknown".equals(ip, ignoreCase = true)) {
-            ip = request.getHeader("HTTP_CLIENT_IP")
+        if (ip == null || ip.isEmpty() || ip.equals("unknown", ignoreCase = true)) {
+            ip = this.getHeader("HTTP_CLIENT_IP")
         }
-        if (ip == null || ip.isEmpty() || "unknown".equals(ip, ignoreCase = true)) {
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR")
+        if (ip == null || ip.isEmpty() || ip.equals("unknown", ignoreCase = true)) {
+            ip = this.getHeader("HTTP_X_FORWARDED_FOR")
         }
-        if (ip == null || ip.isEmpty() || "unknown".equals(ip, ignoreCase = true)) {
-            ip = request.getHeader("X-Real-IP")
+        if (ip == null || ip.isEmpty() || ip.equals("unknown", ignoreCase = true)) {
+            ip = this.getHeader("X-Real-IP")
         }
-        if (ip == null || ip.isEmpty() || "unknown".equals(ip, ignoreCase = true)) {
-            ip = request.remoteAddr
+        if (ip == null || ip.isEmpty() || ip.equals("unknown", ignoreCase = true)) {
+            ip = this.remoteAddr
         }
         return ip ?: "0.0.0.0"
     }
 
+    fun copyfile(src: File, dest: File) {
+        val fis = FileInputStream(src);
+        val fos = FileOutputStream(dest)
+
+        val bis = BufferedInputStream(fis)
+        val bos = BufferedOutputStream(fos)
+        val buf = ByteArray(1024)
+
+        var len: Int
+        while (true) {
+            len = bis.read(buf)
+            if (len == -1) break;
+            bos.write(buf, 0, len)
+        }
+        fis.close()
+        fos.close()
+
+    }
 }
