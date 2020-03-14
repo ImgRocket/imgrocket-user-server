@@ -1,0 +1,6 @@
+{
+    "root": "$file-directory",
+    "server" : "$mysql-server:port",
+    "user" : "$mysql-username",
+    "password" : "$mysql-password"
+}
