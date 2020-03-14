@@ -12,5 +12,7 @@
   </head>
   <body>
   hello world, imgrocket
+  <br>
+  <a href="update_portrait.html">更换头像测试</a>
   </body>
 </html>

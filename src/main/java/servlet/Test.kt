@@ -17,8 +17,9 @@ class Test : HttpServlet() {
         req.characterEncoding = "UTF-8"
         resp.contentType = "text/html;charset=UTF-8"
         writer = resp.writer
-        writer.println("${CONF.portrait.exists()}")
-        writer.println("${CONF.portrait.exists()}")
+        writer.println("portrait: ${CONF.portrait.exists()}")
+        writer.println("<br>")
+        writer.println("file: ${CONF.file.exists()}")
     }
 
     override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {

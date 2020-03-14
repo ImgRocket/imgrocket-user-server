@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>更换头像</title>
+</head>
+<body>
+<form action="/portrait/update" method="post" enctype="multipart/form-data">
+    <label>UID<input name="uid" type="text"></label>
+    <br>
+    <label>TOKEN<input name="token" type="text"></label>
+    <br>
+    <p class="leftDiv">上传头像</p>
+    <p class="rightDiv"><input type="file" name="portrait" class="text"></p>
+    <br>
+    <p class="rightDiv"><input type="submit" value="上传" class="button"></p>
+</form>
+</body>
+</html>

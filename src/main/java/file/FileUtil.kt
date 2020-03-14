@@ -2,6 +2,7 @@ package file
 
 import com.alibaba.fastjson.JSONObject
 import net.coobird.thumbnailator.Thumbnails
+import util.CONF
 import java.io.*
 import java.nio.charset.StandardCharsets
 import javax.servlet.http.HttpServletResponse
@@ -53,10 +54,18 @@ object FileUtil {
     }
 
     fun writePicture2Response(resp: HttpServletResponse, path: String, scale: Double, quality: Double) {
-        resp.reset()
-        val outputStream = resp.outputStream
-        Thumbnails.of(path).scale(scale).outputQuality(quality).toOutputStream(outputStream)
-        outputStream.close()
+        try {
+            resp.reset()
+            val outputStream = resp.outputStream
+            Thumbnails.of(path).scale(scale).outputQuality(quality).toOutputStream(outputStream)
+            outputStream.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            resp.reset()
+            val outputStream = resp.outputStream
+            Thumbnails.of(CONF.portrait.path + "/" + CONF.defaultPortrait).scale(scale).outputQuality(quality).toOutputStream(outputStream)
+            outputStream.close()
+        }
     }
 
 }

@@ -3,11 +3,13 @@ package model
 import conn.MySQLConn
 import enums.Status
 import util.CONF
+import util.MultipleForm
 import util.Value
 import java.sql.SQLException
 import java.sql.Timestamp
 import java.util.*
 import java.util.regex.Pattern
+import javax.servlet.http.HttpServletRequest
 
 class User {
     companion object {
@@ -187,5 +189,57 @@ class User {
             }
         }
 
+        fun updatePortrait(req: HttpServletRequest): Status {
+            val conn = MySQLConn.connection
+            val multipleForm: MultipleForm = MultipleForm(req).build()
+            try {
+                val fields = multipleForm.fields
+                val streams = multipleForm.streams
+                val uid = fields["uid"]
+                val token = fields["token"]
+                if (uid.isNullOrEmpty() || token.isNullOrEmpty() || streams.isEmpty() || streams[0].field != "portrait") { return Status.AE }
+                checkToken(uid, token).let {
+                    when (it) {
+                        Status.OK -> {
+                            val filename = "${uid}_${Value.random()}"
+                            if (multipleForm.saveSingleFile(CONF.portrait.path, filename)) {
+                                val ps = conn.prepareStatement("update user set portrait = ? where uid = ?")
+                                ps.setString(1, filename)
+                                ps.setString(2, uid)
+                                ps.executeUpdate()
+                                ps.close()
+                                return Status.OK
+                            }
+                        }
+                        else -> return it
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                multipleForm.close()
+            }
+            return Status.OTHER
+        }
+
+        fun getPortrait(uid: String?): String {
+            var portrait = CONF.defaultPortrait
+            if (uid != null) {
+                val conn = MySQLConn.connection
+                try {
+                    val ps = conn.prepareStatement("select portrait from user where uid = ? limit 1")
+                    ps.setString(1, uid)
+                    val rs = ps.executeQuery()
+                    if (rs.next()) {
+                        portrait = rs.getString("portrait")
+                    }
+                    rs.close()
+                    ps.close()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            return portrait
+        }
     }
 }
