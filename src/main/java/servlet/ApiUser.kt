@@ -50,7 +50,6 @@ class Register : HttpServlet() {
     private fun <T> Message<T>.write() {
         writer.write(this.json())
     }
-
 }
 
 @WebServlet(urlPatterns = ["/login"])
