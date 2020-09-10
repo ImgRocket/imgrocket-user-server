@@ -54,7 +54,7 @@ class StartTrail : HttpServlet() {
 
 }
 
-@WebServlet(urlPatterns = ["/code/new"])
+@WebServlet(urlPatterns = ["/code/task"])
 class NewTask : HttpServlet() {
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
         req.characterEncoding = "UTF-8"
@@ -75,15 +75,7 @@ class NewTask : HttpServlet() {
         } else {
             User.checkToken(uid, token).let {
                 return when (it) {
-                    Status.OK -> {
-                        val usage = Usage.query(uid)
-                        if (usage != null && usage.used < usage.all) {
-                            MySQLConn.connection.prepareStatement("update `usage` set used = used + 1 where user = ?").apply { setString(1, uid) }.use { ps -> ps.executeQuery() }
-                            Message(Status.OK, "剩余次数足够并-1")
-                        } else {
-                            Message(Status.PME, "无剩余次数，请充值")
-                        }
-                    }
+                    Status.OK -> Usage.task(uid)
                     Status.TE -> Message(Status.TE, "TOKEN失效")
                     Status.UNE -> Message(Status.AIF, "账号不存在")
                     else -> Message(it, "其他错误")
@@ -121,6 +113,7 @@ class Veri : HttpServlet() {
                             c == null -> Message(Status.PME, "激活码不存在")
                             c.user != null -> Message(Status.PME, "激活码已被使用")
                             else -> {
+                                if (!Usage.exists(uid)) { Usage.trail(uid) }
                                 Code.use(code, uid)
                                 Message(Status.OK, "激活码使用成功")
                             }

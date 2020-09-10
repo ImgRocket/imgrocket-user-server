@@ -34,3 +34,27 @@ Content-Type: application/x-www-form-urlencoded
 uid=377495326&token=894C79FB81616476690B1561FF313F4C
 
 ###
+POST https://user.imgrocket.cn/code/query
+Content-Type: application/x-www-form-urlencoded
+
+uid=1480416958&token=5EDFFE4FADB272E206FE8EA979F01348
+
+###
+POST https://user.imgrocket.cn/code/trail
+Content-Type: application/x-www-form-urlencoded
+
+uid=1480416958&token=5EDFFE4FADB272E206FE8EA979F01348
+
+###
+POST https://user.imgrocket.cn/code/use
+Content-Type: application/x-www-form-urlencoded
+
+uid=1480416958&token=5EDFFE4FADB272E206FE8EA979F01348&code=hhrnb
+
+###
+POST https://user.imgrocket.cn/code/task
+Content-Type: application/x-www-form-urlencoded
+
+uid=1480416958&token=5EDFFE4FADB272E206FE8EA979F01348
+
+###
