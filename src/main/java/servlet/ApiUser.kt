@@ -15,14 +15,16 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+private fun <T> Message<T>.write(writer: PrintWriter) {
+    writer.write(this.json())
+}
+
 @WebServlet(urlPatterns = ["/register"])
 class Register : HttpServlet() {
-    private lateinit var writer: PrintWriter
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
         req.characterEncoding = "UTF-8"
         resp.contentType = "text/html;charset=UTF-8"
-        writer = resp.writer
-        register(req).write()
+        register(req).write(resp.writer)
     }
 
     override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
@@ -46,20 +48,14 @@ class Register : HttpServlet() {
             }
         }
     }
-
-    private fun <T> Message<T>.write() {
-        writer.write(this.json())
-    }
 }
 
 @WebServlet(urlPatterns = ["/login"])
 class Login : HttpServlet() {
-    private lateinit var writer: PrintWriter
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
         req.characterEncoding = "UTF-8"
         resp.contentType = "text/html;charset=UTF-8"
-        writer = resp.writer
-        login(req).write()
+        login(req).write(resp.writer)
     }
 
     override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
@@ -97,11 +93,6 @@ class Login : HttpServlet() {
             }
         }
     }
-
-    private fun <T> Message<T>.write() {
-        writer.write(this.json())
-    }
-
 }
 
 @WebServlet(urlPatterns = ["/auto"])
@@ -143,15 +134,12 @@ class AutoLogin : HttpServlet() {
 
 @WebServlet(urlPatterns = ["/portrait/update", "/portrait/get"])
 class Portrait : HttpServlet() {
-    private lateinit var writer: PrintWriter
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
         req.characterEncoding = "UTF-8"
         resp.contentType = "text/html;charset=UTF-8"
-        writer = resp.writer
-
         when (req.requestURI.split("/").let { it[it.size - 1] }) {
             "update" -> {
-                updatePortrait(req).write()
+                updatePortrait(req).write(resp.writer)
             }
 
             "get" -> {
@@ -162,7 +150,7 @@ class Portrait : HttpServlet() {
             }
 
             else -> {
-                Message<String>(Status.OTHER, "其他错误").write()
+                Message<String>(Status.OTHER, "其他错误").write(resp.writer)
             }
         }
     }
@@ -179,9 +167,5 @@ class Portrait : HttpServlet() {
             Status.TE -> Message(Status.TE, "Token过期")
             else -> Message(Status.OTHER, "其他错误")
         }
-    }
-
-    private fun <T> Message<T>.write() {
-        writer.write(this.json())
     }
 }

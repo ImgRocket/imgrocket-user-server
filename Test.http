@@ -1,13 +1,13 @@
-POST http://localhost/register
+POST https://user.imgrocket.cn/register
 Content-Type: application/x-www-form-urlencoded
 
-username=test2&password=123456
+username=test3&password=123456
 
 ###
-POST http://localhost/login
+POST https://user.imgrocket.cn/login
 Content-Type: application/x-www-form-urlencoded
 
-account=test2&password=123456
+account=hellow&password=123456
 
 ###
 POST http://localhost/auto

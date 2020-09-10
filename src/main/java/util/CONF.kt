@@ -15,7 +15,7 @@ object CONF {
     enum class MODE {
         DEBUG, RELEASE
     }
-    private val mode = MODE.DEBUG
+    private val mode = MODE.RELEASE
 
     private val projectRoot: String = File(File(CONF::class.java.classLoader.getResource("./")!!.path).parent).parent
     private val conf = when (mode) {
