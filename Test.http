@@ -1,57 +1,40 @@
-POST https://user.imgrocket.cn/register
-Content-Type: application/x-www-form-urlencoded
-
-username=test3&password=123456
-
-###
-POST https://user.imgrocket.cn/login
-Content-Type: application/x-www-form-urlencoded
-
-account=hellow&password=123456
-
-###
-POST http://localhost/auto
-Content-Type: application/x-www-form-urlencoded
-
-uid=377495326&token=17BA8E27AB33297ACFC20ED665AC91B3
-
-###
+### 注册用户：username为唯一的用户名，password为密码
 POST https://user.imgrocket.cn/register
 Content-Type: application/x-www-form-urlencoded
 
 username=测试&password=123456
 
-###
+### 登录：account为用户名或id，password为密码，返回包括token的用户信息
 POST https://user.imgrocket.cn/login
 Content-Type: application/x-www-form-urlencoded
 
 account=hhrlalala&password=19237912
 
-###
+### 自动登录：每次打开APP检查账号有效性，uid为用户id，token为登录时传回的token
 POST https://user.imgrocket.cn/auto
 Content-Type: application/x-www-form-urlencoded
 
 uid=377495326&token=894C79FB81616476690B1561FF313F4C
 
-###
+### 兑换码次数查询：uid为用户id，token为登录时传回的token
 POST https://user.imgrocket.cn/code/query
 Content-Type: application/x-www-form-urlencoded
 
 uid=1480416958&token=5EDFFE4FADB272E206FE8EA979F01348
 
-###
+### 申请尝试：发送请求可以进行有且仅有一次的试用申请
 POST https://user.imgrocket.cn/code/trail
 Content-Type: application/x-www-form-urlencoded
 
 uid=1480416958&token=5EDFFE4FADB272E206FE8EA979F01348
 
-###
+### 使用兑换码：code为兑换码，可增加对应使用次数到账号
 POST https://user.imgrocket.cn/code/use
 Content-Type: application/x-www-form-urlencoded
 
 uid=1480416958&token=5EDFFE4FADB272E206FE8EA979F01348&code=hhrnb
 
-###
+### 新建任务：发送请求使用次数+1，由图片处理服务器发送
 POST https://user.imgrocket.cn/code/task
 Content-Type: application/x-www-form-urlencoded
 
